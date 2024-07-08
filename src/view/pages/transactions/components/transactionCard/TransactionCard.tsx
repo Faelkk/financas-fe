@@ -3,25 +3,18 @@ import { formatCurrency } from "../../../../../app/utils/formatCurrency";
 import { cn } from "../../../../../app/utils/cn";
 import { useModal } from "../../../../modal/useModal";
 import EditTransaction from "../../../../components/editTransaction/EditTransaction";
-import { categories } from "../../../../../mocks/categories";
 import { BackpackIcon } from "@radix-ui/react-icons";
-
-export type Transaction = {
-  id: number;
-  description: string;
-  transferNumber: string;
-  transactionType: string;
-  date: Date;
-  categoryId: number;
-};
+import { Transaction } from "../../../../../app/entities/Transactions";
+import { useCategories } from "../../../../../app/hooks/useCategories";
 
 type TransactionCardProps = {
   transaction: Transaction;
 };
 
 const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
-  const isLower = transaction.transactionType === "despesas" ? true : false;
+  const isLower = transaction.transactionType === "EXPENSE" ? true : false;
   const { isModalOpen, handleToggleModal } = useModal();
+  const { categories } = useCategories();
 
   const category = categories.find((cat) => cat.id === transaction.categoryId);
 
@@ -41,7 +34,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
             </button>
             <div className="flex flex-col">
               <h2 className="font-inter text-gray-50">
-                {transaction.description}
+                {transaction.transactionDescription}
               </h2>
               <span className="text-[#aaa] font-inter mt-1 text-[14px] max-w-[180px]">
                 Conta inicial
@@ -55,12 +48,9 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
                 isLower ? "text-red-400" : "text-teal-900"
               )}
             >
-              {isLower ? "-" : "+"} R${" "}
-              {formatCurrency(String(transaction.transferNumber))}
+              {isLower ? "-" : "+"}
+              {formatCurrency(String(transaction.transactionValue))}
             </h2>
-            <span className="text-[#aaa] font-inter mt-1 text-[14px] max-w-[180px]">
-              Pago
-            </span>
           </div>
         </div>
       </div>

@@ -3,6 +3,9 @@ import Modal from "../../modal/Modal";
 import UserIcon from "../../icons/UserIcon";
 import AccountBalanceView from "./AccountBalanceView";
 import AccountCategory from "./AccountCategory";
+import { useModal } from "../../modal/useModal";
+import AccountConfirmLogout from "./AccountConfirmLogout";
+import { useAuth } from "../../../app/hooks/useAuth";
 
 const AccountConfig = ({
   isModalOpen,
@@ -11,11 +14,17 @@ const AccountConfig = ({
   isModalOpen: boolean;
   handleToggleModal: () => void;
 }) => {
+  const {
+    handleToggleModal: handleConfirmModal,
+    isModalOpen: isHandleConfirmModal,
+  } = useModal();
+  const { user } = useAuth();
+
   return (
     <>
       <Modal
         open={isModalOpen}
-        title="Modal para deletar categoria"
+        title="Modal para ver perfil"
         classNameModal="p-0 flex flex-col h-full w-full medium:h-auto md:w-[80%] bg-[#151513]"
       >
         <div className="flex flex-col   gap-4   rounded-md flex-1">
@@ -35,7 +44,7 @@ const AccountConfig = ({
                 </div>
               </div>
               <h2 className="font-inter text-black-600 font-semibold">
-                Rafael
+                {user?.name}
               </h2>
 
               <button className="bg-[#232D24] text-[#348351] font-inter font-semibold p-2 rounded-md">
@@ -58,12 +67,22 @@ const AccountConfig = ({
               </div>
             </section>
 
-            <button className="p-3 rounded-md border border-[#E24F45] font-inter text-[#E24F45] justify-center uppercase font-semibold max-w-[230px] w-full mb-10 md:mb-5 flex items-center ">
+            <button
+              className="p-3 rounded-md border border-[#E24F45] font-inter text-[#E24F45] justify-center uppercase font-semibold max-w-[230px] w-full mb-10 md:mb-5 flex items-center "
+              onClick={handleConfirmModal}
+            >
               Deslogar da conta
             </button>
           </section>
         </div>
       </Modal>
+
+      {isHandleConfirmModal && (
+        <AccountConfirmLogout
+          handleConfirmModal={handleConfirmModal}
+          isHandleConfirmModal={isHandleConfirmModal}
+        />
+      )}
     </>
   );
 };

@@ -1,29 +1,29 @@
+import { TransactionResponse } from "../../../../app/services/transactionsService/getAll";
 import { formatCurrency } from "../../../../app/utils/formatCurrency";
-import { Transaction } from "../components/transactionCard/TransactionCard";
 
-type TransactionType = "despesas" | "receitas";
+type TransactionType = "EXPENSE" | "INCOME";
 
 const TransactionsOverview = ({
   filteredTransactions,
 }: {
-  filteredTransactions: Transaction[];
+  filteredTransactions: TransactionResponse;
 }) => {
   const calculateTotal = (
-    transactions: Transaction[],
+    transactions: TransactionResponse,
     type: TransactionType
   ): number => {
     const total = transactions
       .filter((transaction) => transaction.transactionType === type)
       .reduce((acc, transaction) => {
-        const amount = parseFloat(transaction.transferNumber);
+        const amount = parseFloat(transaction.transactionValue);
         return acc + amount;
       }, 0);
 
     return total;
   };
 
-  const totalDespesas = calculateTotal(filteredTransactions, "despesas");
-  const totalReceitas = calculateTotal(filteredTransactions, "receitas");
+  const totalDespesas = calculateTotal(filteredTransactions, "EXPENSE");
+  const totalReceitas = calculateTotal(filteredTransactions, "INCOME");
 
   return (
     <div className="px-3 hidden pp:flex justify-center items-center border-t border-black-300 h-[110px]">

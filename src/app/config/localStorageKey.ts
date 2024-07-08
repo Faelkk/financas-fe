@@ -1,3 +1,3 @@
 export const localStorageKeys = {
-  ACESS_TOKEN: "fincheck:acessToken",
+  ACESS_TOKEN: "financas-api:acessToken",
 };

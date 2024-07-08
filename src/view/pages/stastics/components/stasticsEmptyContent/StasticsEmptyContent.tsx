@@ -28,7 +28,7 @@ const StasticsEmptyContent = () => {
           </div>
           <div className="flex flex-col items-center">
             <span className="font-inter text-[#8CA3CD] font-medium text-[14px]">
-              R$ 550,00
+              R$ 0,00
             </span>
             <span className="text-[#aaa] font-inter  max-w-[200px] text-center   pp:max-w-max  text-[12px]  pp:text-[16px]">
               Saldo

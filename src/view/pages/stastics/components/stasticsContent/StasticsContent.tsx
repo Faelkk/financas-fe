@@ -1,12 +1,12 @@
 import StasticsDoughnut from "../stasticsDoughnut/StasticsDoughnut";
 import StasticsLine from "../../stasticsLine/StasticsLine";
-import { Transaction } from "../../../transactions/components/transactionCard/TransactionCard";
+import { TransactionResponse } from "../../../../../app/services/transactionsService/getAll";
 
 const StasticsContent = ({
   filteredTransactions,
   activeMonth,
 }: {
-  filteredTransactions: Transaction[];
+  filteredTransactions: TransactionResponse;
   activeMonth: number;
 }) => {
   return (

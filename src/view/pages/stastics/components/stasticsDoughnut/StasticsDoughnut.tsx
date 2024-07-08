@@ -1,19 +1,21 @@
 import { Doughnut } from "react-chartjs-2";
-import { Transaction } from "../../../transactions/components/transactionCard/TransactionCard";
 import StaticsCategory from "./StaticsCategory";
-import { categories } from "../../../../../mocks/categories";
+import { TransactionResponse } from "../../../../../app/services/transactionsService/getAll";
+import { useCategories } from "../../../../../app/hooks/useCategories";
+import Spinner from "../../../../components/Spinner";
 
 const StasticsDoughnut = ({
   filteredTransactions,
 }: {
-  filteredTransactions: Transaction[];
+  filteredTransactions: TransactionResponse;
 }) => {
+  const { categories, isLoading } = useCategories();
   const transactionsDespesas = filteredTransactions.filter(
-    (transaction) => transaction.transactionType === "despesas"
+    (transaction) => transaction.transactionType === "EXPENSE"
   );
 
   const totalDespesas = transactionsDespesas.reduce((acc, transaction) => {
-    return acc + Number(transaction.transferNumber);
+    return acc + Number(transaction.transactionValue);
   }, 0);
 
   const despesasByCategory = categories
@@ -21,7 +23,7 @@ const StasticsDoughnut = ({
       const total = transactionsDespesas
         .filter((transaction) => transaction.categoryId === category.id)
         .reduce((acc, transaction) => {
-          return acc + Number(transaction.transferNumber);
+          return acc + Number(transaction.transactionValue);
         }, 0);
       const percentage = totalDespesas > 0 ? (total / totalDespesas) * 100 : 0;
       return { ...category, total, percentage };
@@ -56,32 +58,41 @@ const StasticsDoughnut = ({
       },
     },
   };
+
   return (
     <>
-      {despesasByCategory.length > 0 ? (
-        <div className="bg-[#1C1B19] flex flex-col p-3 max-w-[90%] md:max-w-[50%] w-full rounded-md overflow-y-auto custom-scrollbar max-h-[350px]">
-          <h2 className="font-poppins font-semibold text-gray-50 mb-3">
-            Despesas por categorias
-          </h2>
-          <div style={{ maxWidth: "300px", margin: "0 auto" }}>
-            <Doughnut data={data} options={options} />
-          </div>
-
-          <div className="flex flex-col gap-2 mt-4 ">
-            {despesasByCategory.map((category) => (
-              <StaticsCategory key={category.id} category={category} />
-            ))}
-          </div>
+      {isLoading ? (
+        <div className="mt-5">
+          <Spinner />
         </div>
       ) : (
-        <div className="bg-[#1C1B19] flex flex-col p-3 max-w-[90%] md:max-w-[50%] w-full rounded-md p-8">
-          <h2 className="font-poppins font-semibold text-gray-50 mb-3">
-            Despesas por categorias
-          </h2>
-          <span className="text-[#aaa] font-inter max-w-[200px] text-center pp:max-w-max text-[12px] pp:text-[16px]">
-            Nenhum lançamento no período
-          </span>
-        </div>
+        <>
+          {despesasByCategory.length > 0 ? (
+            <div className="bg-[#1C1B19] flex flex-col p-3 max-w-[90%] md:max-w-[50%] w-full rounded-md overflow-y-auto custom-scrollbar max-h-[350px]">
+              <h2 className="font-poppins font-semibold text-gray-50 mb-3">
+                Despesas por categorias
+              </h2>
+              <div style={{ maxWidth: "300px", margin: "0 auto" }}>
+                <Doughnut data={data} options={options} />
+              </div>
+
+              <div className="flex flex-col gap-2 mt-4 ">
+                {despesasByCategory.map((category) => (
+                  <StaticsCategory key={category.id} category={category} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-[#1C1B19] flex flex-col p-3 max-w-[90%] md:max-w-[50%] w-full rounded-md p-8">
+              <h2 className="font-poppins font-semibold text-gray-50 mb-3">
+                Despesas por categorias
+              </h2>
+              <span className="text-[#aaa] font-inter max-w-[200px] text-center pp:max-w-max text-[12px] pp:text-[16px]">
+                Nenhum lançamento no período
+              </span>
+            </div>
+          )}
+        </>
       )}
     </>
   );

@@ -1,18 +1,24 @@
-import { CategoryType } from "../../../../../../mocks/categories";
 import Modal from "../../../../../modal/Modal";
+import { Category } from "../../../../../../app/entities/Category";
+import { useModalDeleteCategory } from "./useModalDeleteCategory";
+import { cn } from "../../../../../../app/utils/cn";
+import Spinner from "../../../../../components/Spinner";
 
 const ModalDeleteCategory = ({
   handleToggleDeleteCategoryModal,
+  handleToggleEditModal,
   categoryBeingDeleted,
   isDeleteModalOpen,
 }: {
   handleToggleDeleteCategoryModal: () => void;
+  handleToggleEditModal: () => void;
   isDeleteModalOpen: boolean;
-  categoryBeingDeleted: CategoryType;
+  categoryBeingDeleted: Category;
 }) => {
-  const handleDeleCategory = () => {
-    console.log("deletou");
-  };
+  const { handleDeleCategory, isPending } = useModalDeleteCategory(
+    handleToggleDeleteCategoryModal,
+    handleToggleEditModal
+  );
 
   return (
     <Modal
@@ -27,10 +33,19 @@ const ModalDeleteCategory = ({
         </h2>
         <div className="flex flex-col items-center gap-3 w-full">
           <button
-            className="p-3 rounded-md bg-[#E24F45] font-inter text-gray-50 font-semibold max-w-[230px] w-full"
-            onClick={handleDeleCategory}
+            className={cn(
+              "p-3 rounded-md bg-[#E24F45] font-inter text-gray-50 font-semibold max-w-[230px] w-full disabled:bg-[#484849]"
+            )}
+            onClick={() => handleDeleCategory(categoryBeingDeleted)}
+            disabled={isPending}
           >
-            Confirmar exclusão
+            {isPending ? (
+              <div className="flex justify-center ">
+                <Spinner className="fill-gray-500 w-6 h-6" />{" "}
+              </div>
+            ) : (
+              " Confirmar exclusão"
+            )}
           </button>
           <button
             className="p-3 rounded-md border border-black-600 font-inter text-black-600  font-semibold max-w-[230px] w-full"

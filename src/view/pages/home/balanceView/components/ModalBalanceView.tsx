@@ -6,13 +6,22 @@ import {
 import Modal from "../../../../modal/Modal";
 import { useModal } from "../../../../modal/useModal";
 import ModalEditBalanceView from "./ModalEditBalanceView";
+import { Dispatch, SetStateAction } from "react";
 
 const ModalBalanceView = ({
   handleToggleModal,
   isModalOpen,
+  saldo,
+  setSaldo,
+  setFormattedSaldo,
+  formattedSaldo,
 }: {
   handleToggleModal: () => void;
   isModalOpen: boolean;
+  saldo: number;
+  setSaldo: Dispatch<SetStateAction<number>>;
+  setFormattedSaldo: Dispatch<SetStateAction<string>>;
+  formattedSaldo: string;
 }) => {
   const {
     isModalOpen: isEditModalOpen,
@@ -45,7 +54,8 @@ const ModalBalanceView = ({
             <div className="flex gap-2">
               <span className="text-gray-50 font-poppins">Saldo atual</span>
               <span className="text-[#8CA3CD] font-medium font-inter block">
-                R$ 2.555,01
+                {saldo && saldo < 0 ? "-" : ""}
+                {formattedSaldo}
               </span>
             </div>
             <button onClick={handleToggleEditModal}>
@@ -57,6 +67,8 @@ const ModalBalanceView = ({
 
       {isEditModalOpen && (
         <ModalEditBalanceView
+          setSaldo={setSaldo}
+          setFormattedSaldo={setFormattedSaldo}
           handleToggleEditModal={handleToggleEditModal}
           isEditModalOpen={isEditModalOpen}
         />

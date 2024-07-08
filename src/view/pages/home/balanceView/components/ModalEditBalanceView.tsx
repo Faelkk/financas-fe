@@ -6,17 +6,21 @@ import {
 } from "@radix-ui/react-icons";
 import Modal from "../../../../modal/Modal";
 import { cn } from "../../../../../app/utils/cn";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import useModalEditBalanceViewController from "./useModalEditBalanceViewController";
 
 interface ModalEditBalanceViewProps {
   handleToggleEditModal: () => void;
   isEditModalOpen: boolean;
+  setSaldo: Dispatch<SetStateAction<number>>;
+  setFormattedSaldo: Dispatch<SetStateAction<string>>;
 }
 
 const ModalEditBalanceView: FC<ModalEditBalanceViewProps> = ({
   handleToggleEditModal,
   isEditModalOpen,
+  setFormattedSaldo,
+  setSaldo,
 }) => {
   const {
     errors,
@@ -27,7 +31,11 @@ const ModalEditBalanceView: FC<ModalEditBalanceViewProps> = ({
     handleToggleNegative,
     formattedValue,
     isNegative,
-  } = useModalEditBalanceViewController();
+  } = useModalEditBalanceViewController(
+    setFormattedSaldo,
+    setSaldo,
+    handleToggleEditModal
+  );
 
   return (
     <Modal

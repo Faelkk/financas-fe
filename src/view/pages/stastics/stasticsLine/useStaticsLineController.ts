@@ -1,26 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { TransactionResponse } from "../../../../app/services/transactionsService/getAll";
 import { formatCurrency } from "../../../../app/utils/formatCurrency";
-import { Transaction } from "../../transactions/components/transactionCard/TransactionCard";
 import { generateMonths } from "../useStaticsController";
 
+export const calculateTotal = (
+  transactions: TransactionResponse,
+  type: "EXPENSE" | "INCOME"
+): number => {
+  const total = transactions
+    .filter((transaction) => transaction.transactionType === type)
+    .reduce((acc, transaction: any) => {
+      return acc + transaction.transactionValue;
+    }, 0);
+
+  return total;
+};
+
 export function useStaticsLineController(
-  filteredTransactions: Transaction[],
+  filteredTransactions: TransactionResponse,
   activeMonth: number
 ) {
-  const calculateTotal = (
-    transactions: Transaction[],
-    type: "despesas" | "receitas"
-  ): number => {
-    const total = transactions
-      .filter((transaction) => transaction.transactionType === type)
-      .reduce((acc, transaction) => {
-        return acc + transaction.transferNumber;
-      }, 0);
-
-    return total;
-  };
-
-  const totalDespesas = calculateTotal(filteredTransactions, "despesas");
-  const totalReceitas = calculateTotal(filteredTransactions, "receitas");
+  const totalDespesas = calculateTotal(filteredTransactions, "EXPENSE");
+  const totalReceitas = calculateTotal(filteredTransactions, "INCOME");
   const formatCurrencyReceitas = formatCurrency(String(totalReceitas));
   const formatCurrencyDespesas = formatCurrency(String(totalDespesas));
   const months = generateMonths();

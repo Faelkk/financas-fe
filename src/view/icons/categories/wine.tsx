@@ -10,7 +10,7 @@ const WineIcon = ({
   return (
     <>
       <svg
-        fill="none"
+        fill={color}
         stroke={color}
         strokeWidth="2"
         strokeLinecap="round"
@@ -20,7 +20,10 @@ const WineIcon = ({
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M12 13V21M12 13C15.3137 13 18 10.3137 18 7V3H6V7C6 10.3137 8.68629 13 12 13ZM8 21H16" />
+        <path
+          d="M12 13V21M12 13C15.3137 13 18 10.3137 18 7V3H6V7C6 10.3137 8.68629 13 12 13ZM8 21H16"
+          fill={color}
+        />
       </svg>
     </>
   );

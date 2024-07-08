@@ -3,14 +3,21 @@ import {
   EyeClosedIcon,
   EyeOpenIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { cn } from "../../../../app/utils/cn";
 import ModalBalanceView from "./components/ModalBalanceView";
-import { useModal } from "../../../modal/useModal";
+import { useBalanceView } from "./useBalanceView";
 
 const BalanceView = () => {
-  const [isClosed, setIsClosed] = useState(false);
-  const { isModalOpen, handleToggleModal } = useModal();
+  const {
+    formattedSaldo,
+    isModalOpen,
+    handleToggleModal,
+    isClosed,
+    saldo,
+    setIsClosed,
+    setSaldo,
+    setFormattedSaldo,
+  } = useBalanceView();
 
   return (
     <>
@@ -27,7 +34,8 @@ const BalanceView = () => {
                   isClosed ? "blur-sm" : ""
                 )}
               >
-                R$ 0,00
+                {saldo && saldo < 0 ? "-" : ""}
+                {formattedSaldo}
               </span>
             </div>
             <button onClick={() => setIsClosed(!isClosed)}>
@@ -58,7 +66,8 @@ const BalanceView = () => {
                       isClosed ? "blur-sm" : ""
                     )}
                   >
-                    R$ 0,00
+                    {saldo && saldo < 0 ? "-" : ""}
+                    {formattedSaldo}
                   </span>
                 </div>
 
@@ -78,6 +87,10 @@ const BalanceView = () => {
         <ModalBalanceView
           handleToggleModal={handleToggleModal}
           isModalOpen={isModalOpen}
+          saldo={saldo}
+          setSaldo={setSaldo}
+          formattedSaldo={formattedSaldo}
+          setFormattedSaldo={setFormattedSaldo}
         />
       )}
     </>

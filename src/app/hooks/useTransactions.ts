@@ -1,12 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { transactionsService } from "../services/TransactionService";
-import { typeTransactionsFilter } from "../services/TransactionService/getAll";
+import { transactionsService } from "../services/transactionsService";
+
+export interface typeTransactionsFilter {
+  month: string;
+  year: string;
+  type: "EXPENSE" | "INCOME" | "";
+}
 
 export function useTransactions(filters: typeTransactionsFilter) {
-  const { data, isFetching, isPending, refetch } = useQuery({
-    queryKey: ["transactions"],
+  const { data, isFetching, isPending, refetch, error } = useQuery({
+    queryKey: ["transactions", filters],
     queryFn: () => transactionsService.getAll(filters),
-    enabled: false,
   });
 
   return {
@@ -14,5 +18,6 @@ export function useTransactions(filters: typeTransactionsFilter) {
     isLoading: isFetching,
     isPending,
     refetch,
+    error,
   };
 }

@@ -12,6 +12,13 @@ interface DataLine {
 }
 
 const LineChart = ({ data }: LineChartProps) => {
+  const receitasValue = parseFloat(
+    data.receitas.replace("R$", "").replace(",", ".")
+  );
+  const despesasValue = parseFloat(
+    data.despesas.replace("R$", "").replace(",", ".")
+  );
+
   const chartData = {
     labels: [data.mes],
     datasets: [
@@ -20,14 +27,14 @@ const LineChart = ({ data }: LineChartProps) => {
         backgroundColor: "#087F5B",
         borderColor: "#087F5B",
         borderWidth: 1,
-        data: [parseFloat(data.receitas.replace(",", "."))],
+        data: [receitasValue || 0],
       },
       {
         label: "Despesas",
         backgroundColor: "#DF535E",
         borderColor: "#DF535E",
         borderWidth: 1,
-        data: [parseFloat(data.despesas.replace(",", "."))],
+        data: [despesasValue || 0],
       },
     ],
   };

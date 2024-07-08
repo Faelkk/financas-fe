@@ -6,13 +6,17 @@ import ModalColors from "./ModalColors";
 import { useModalCreateCustomCategoryController } from "./useModalCreateCustomCategoryController";
 
 const ModalCreateCustomCategory = ({
+  selectedCategoryType,
   HandleToggleCustomModal,
   isModalCategoryOpen,
 }: {
+  selectedCategoryType: "EXPENSE" | "INCOME";
   HandleToggleCustomModal: () => void;
   isModalCategoryOpen: boolean;
 }) => {
   const {
+    isPending,
+    iconRef,
     errors,
     handleSubmit,
     register,
@@ -21,7 +25,10 @@ const ModalCreateCustomCategory = ({
     selectedIcon,
     handleChangeCategoryIcon,
     handleChangeColor,
-  } = useModalCreateCustomCategoryController();
+  } = useModalCreateCustomCategoryController(
+    selectedCategoryType,
+    HandleToggleCustomModal
+  );
 
   return (
     <>
@@ -31,12 +38,14 @@ const ModalCreateCustomCategory = ({
         classNameModal="p-0 flex flex-col medium:h-auto lg:max-w-[700px]"
       >
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
-          <header
-            className="flex flex-col gap-5 bg-[#1E1E1E] p-5 cursor-pointer"
-            onClick={HandleToggleCustomModal}
-          >
+          <header className="flex flex-col gap-5 bg-[#1E1E1E] p-5 cursor-pointer">
             <div className="flex items-center gap-3 r">
-              <ChevronLeftIcon color="#FFF" height={20} width={20} />
+              <ChevronLeftIcon
+                color="#FFF"
+                height={20}
+                width={20}
+                onClick={HandleToggleCustomModal}
+              />
 
               <h2 className="font-poppins text-gray-200 font-semibold">
                 Criar categoria
@@ -88,6 +97,7 @@ const ModalCreateCustomCategory = ({
                 </h2>
 
                 <CustomCategoryIcons
+                  iconRef={iconRef}
                   selectedIcon={selectedIcon}
                   handleChangeCategoryIcon={handleChangeCategoryIcon}
                 />
@@ -95,7 +105,9 @@ const ModalCreateCustomCategory = ({
             </div>
             <div className="flex justify-center w-full mt-10">
               <button
-                disabled={isFormEmpty || Object.keys(errors).length > 0}
+                disabled={
+                  isFormEmpty || Object.keys(errors).length > 0 || isPending
+                }
                 className={cn(
                   "rounded-full bg-teal-900 p-2 max-w-12 max-h-12 h-12 w-12 flex items-center justify-center disabled:bg-gray-500"
                 )}

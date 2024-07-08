@@ -1,13 +1,13 @@
 import { useWindowWidth } from "../../../../../app/hooks/useWindowWidth";
 import { useWindowHeight } from "../../../../../app/hooks/useWindowHeight";
-import TransactionCard, {
-  Transaction,
-} from "../transactionCard/TransactionCard";
+import TransactionCard from "../transactionCard/TransactionCard";
+import { TransactionResponse } from "../../../../../app/services/transactionsService/getAll";
+import { Transaction } from "../../../../../app/entities/Transactions";
 
 const TransactionsList = ({
   filteredTransactions,
 }: {
-  filteredTransactions: Transaction[];
+  filteredTransactions: TransactionResponse;
 }) => {
   const width = useWindowWidth();
   const height = useWindowHeight();
@@ -56,13 +56,18 @@ const TransactionsList = ({
 
 export default TransactionsList;
 
-const groupTransactionsByDate = (transactions) => {
-  return transactions.reduce((acc, transaction) => {
-    const date = transaction.date.toDateString();
-    if (!acc[date]) {
-      acc[date] = [];
+const groupTransactionsByDate = (transactions: TransactionResponse) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return transactions.reduce((acc: any, transaction) => {
+    const transactionDate = new Date(transaction.date);
+
+    if (!isNaN(transactionDate.getTime())) {
+      const dateKey = transactionDate.toDateString();
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(transaction);
     }
-    acc[date].push(transaction);
     return acc;
   }, {});
 };

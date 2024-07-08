@@ -1,10 +1,13 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 import toast from "react-hot-toast";
+import { useAuth } from "../../../../app/hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import { usersService } from "../../../../app/services/userService";
+import { SignInParams } from "../../../../app/services/userService/signin";
 
 const schema = z.object({
   email: z
@@ -19,15 +22,8 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-// const { mutateAsync, isPending } = useMutation({
-//     mutationFn: async (data: SignInParams) => {
-//         return authService.signin(data);
-//     },
-// });
-
 const useSigninController = () => {
-  const isPending = false;
-
+  const { signin } = useAuth();
   const {
     register,
     handleSubmit: HookFormSubmit,
@@ -37,11 +33,19 @@ const useSigninController = () => {
     resolver: zodResolver(schema),
   });
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: SignInParams) => {
+      return usersService.signin(data);
+    },
+  });
+
   const handleSubmit = HookFormSubmit(async (data) => {
     try {
-      console.log(data);
+      const acessToken = await mutateAsync(data);
+
+      signin(acessToken as unknown as string);
     } catch {
-      toast.error("Ocorreu um erro ao criar a conta");
+      toast.error("Ocorreu um erro ao fazer login ");
     }
   });
 

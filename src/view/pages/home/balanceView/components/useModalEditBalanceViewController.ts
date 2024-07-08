@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const formatCurrency = (value: string): string => {
   if (!value) return "0,00";
@@ -34,7 +34,11 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const useModalEditBalanceViewController = () => {
+const useModalEditBalanceViewController = (
+  setFormattedSaldo: Dispatch<SetStateAction<string>>,
+  setSaldo: Dispatch<SetStateAction<number>>,
+  handleToggleEditModal: () => void
+) => {
   const isPending = false;
   const [isNegative, setIsNegative] = useState(false);
   const [formattedValue, setFormattedValue] = useState("0,00");
@@ -51,12 +55,22 @@ const useModalEditBalanceViewController = () => {
   const handleSubmit = HookFormSubmit(async (data) => {
     try {
       const parsedValue = parseCurrency(data.number);
-      console.log({ number: parsedValue });
+
+      if (!isNegative) {
+        setSaldo(parsedValue);
+        setFormattedSaldo(formatCurrency(String(parsedValue)));
+        localStorage.setItem("saldo", String(parsedValue));
+      } else {
+        setSaldo(-parsedValue);
+        setFormattedSaldo(formatCurrency(String(-parsedValue)));
+        localStorage.setItem("saldo", String(-parsedValue));
+      }
+
+      handleToggleEditModal();
     } catch {
       toast.error("Ocorreu um erro ao salvar valor");
     }
   });
-
   const values = watch();
 
   const handleToggleNegative = () => {

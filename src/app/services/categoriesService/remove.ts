@@ -1,6 +1,7 @@
 import { httpClient } from "../httpClient";
 
-export async function remove(transactionId: string) {
-  const { data } = await httpClient.delete(`/transactions/${transactionId}`);
+export async function remove(categoryId: string) {
+  const data = await httpClient.delete(`/categories/${categoryId}`);
+
   return data;
 }

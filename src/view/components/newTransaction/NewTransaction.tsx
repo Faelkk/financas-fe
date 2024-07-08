@@ -20,7 +20,7 @@ const NewTransaction = ({
 }: {
   IsTransactionModalOpen: boolean;
   handleToggleTransactionModal: () => void;
-  defaultTransaction?: "despesas" | "receitas";
+  defaultTransaction?: "EXPENSE" | "INCOME";
 }) => {
   const {
     errors,
@@ -35,12 +35,13 @@ const NewTransaction = ({
     control,
     setCategoryActive,
     categories,
+    isLoading,
     categoryActive,
-  } = useNewTransactionController();
+  } = useNewTransactionController(handleToggleTransactionModal);
 
   const handleClickTransactionType = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    type: "despesas" | "receitas"
+    type: "EXPENSE" | "INCOME"
   ) => {
     event.stopPropagation();
     if (transactionType !== type) {
@@ -50,9 +51,9 @@ const NewTransaction = ({
 
   useEffect(() => {
     if (defaultTransaction) {
-      defaultTransaction === "despesas"
-        ? setTransactionType("despesas")
-        : setTransactionType("receitas");
+      defaultTransaction === "EXPENSE"
+        ? setTransactionType("EXPENSE")
+        : setTransactionType("INCOME");
     }
   }, []);
 
@@ -70,11 +71,11 @@ const NewTransaction = ({
                 <div className="flex flex-col items-center">
                   <div
                     className="font-poppins text-gray-50 font-semibold pb-3 cursor-pointer"
-                    onClick={(e) => handleClickTransactionType(e, "despesas")}
+                    onClick={(e) => handleClickTransactionType(e, "EXPENSE")}
                   >
                     Despesa
                   </div>
-                  {transactionType === "despesas" ? (
+                  {transactionType === "EXPENSE" ? (
                     <div className="h-2 w-2 rounded-full bg-gray-0"></div>
                   ) : (
                     ""
@@ -84,12 +85,12 @@ const NewTransaction = ({
                 <div className="flex flex-col items-center">
                   <div
                     className="font-poppins text-gray-50 font-semibold pb-3 cursor-pointer"
-                    onClick={(e) => handleClickTransactionType(e, "receitas")}
+                    onClick={(e) => handleClickTransactionType(e, "INCOME")}
                   >
                     Receitas
                   </div>
 
-                  {transactionType === "receitas" ? (
+                  {transactionType === "INCOME" ? (
                     <div className="h-2 w-2 rounded-full bg-gray-0"></div>
                   ) : (
                     ""
@@ -102,10 +103,10 @@ const NewTransaction = ({
               <input
                 type="text"
                 placeholder="0,00"
-                id="transferNumber"
+                id="transactionValue"
                 value={formattedValue}
                 className="bg-transparent font-inter text-[20px] font-semibold text-gray-100 placeholder:text-gray-100  border border-gray-400 rounded-md p-1 max-w-[80%] w-full focus:outline-none p-2"
-                {...register("transferNumber")}
+                {...register("transactionValue")}
               />
             </div>
           </header>
@@ -114,7 +115,7 @@ const NewTransaction = ({
             <div className="flex flex-col gap-1 flex-1">
               <div className="flex flex-col gap-3 p-5">
                 <label
-                  htmlFor="description"
+                  htmlFor="transactionDescription"
                   className="font-inter text-[#A6A8A5] font-medium "
                 >
                   Descrição
@@ -127,17 +128,19 @@ const NewTransaction = ({
                     placeholder="Adicione a descrição"
                     autoComplete="off"
                     className="bg-transparent font-inter text-[#A6A8A5] placeholder:text-[#A6A8A5] focus:outline-none border-none"
-                    {...register("description")}
+                    {...register("transactionDescription")}
                   />
                 </div>
-                {errors.description && (
+                {errors.transactionDescription && (
                   <span className="text-red-500">
-                    {errors.description.message}
+                    {errors.transactionDescription.message}
                   </span>
                 )}
               </div>
               <div className="w-full h-[1px] bg-black-400"></div>
               <CategorysTransaction
+                isLoading={isLoading}
+                selectedCategoryType={transactionType}
                 setCategoryActive={setCategoryActive}
                 handleCategorySelect={setCategoryId}
                 category={categoryActive}

@@ -2,6 +2,7 @@ import SliderNavigation from "./SliderNavigation";
 import Slider from "./slideProvider";
 import { Slide, SliderProps } from "./index";
 import SliderOption from "./SliderOption";
+import { generateMonths } from "../../../stastics/useStaticsController";
 
 export const settings: SliderProps = {
   slidesPerView: 2,
@@ -20,39 +21,29 @@ export const settings: SliderProps = {
   },
 };
 
-export const generateMonths = () => {
-  const months = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ];
-  return months;
-};
-
 interface FiltersMonthsTransactionsProps {
   onMonthChange: (monthIndex: number) => void;
+  currentMonth: number;
+  currentYear: number;
+  isLoading: boolean;
 }
 
 const FiltersMonthsTransactions = ({
   onMonthChange,
+  currentMonth,
+  currentYear,
+  isLoading,
 }: FiltersMonthsTransactionsProps) => {
   const months = generateMonths();
-  const currentMonth = new Date().getMonth();
 
   return (
     <section className="bg-[#1C1B19] border-b border-black-400 p-2 w-full md:border-none md:bg-transparent flex md:justify-center ">
       <div className="relative w-full justify-center items-center flex md:max-w-[50%]">
         <Slider settings={settings} month={currentMonth}>
-          <SliderNavigation onMonthChange={onMonthChange} />
+          <SliderNavigation
+            onMonthChange={onMonthChange}
+            isLoading={isLoading}
+          />
           <section
             data-aos="fade-up"
             data-aos-duration="500"
@@ -62,10 +53,12 @@ const FiltersMonthsTransactions = ({
               <Slide key={index}>
                 {({ isActive }) => (
                   <SliderOption
+                    currentYear={currentYear}
                     index={index}
                     month={month}
                     isActive={isActive}
                     onMonthClick={onMonthChange}
+                    isLoading={isLoading}
                   />
                 )}
               </Slide>

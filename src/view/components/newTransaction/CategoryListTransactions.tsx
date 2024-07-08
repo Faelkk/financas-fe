@@ -1,15 +1,16 @@
-import { useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Modal from "../../modal/Modal";
 import CategoryItemTransaction from "./CategoryItemTransaction";
-import { CategoryType } from "../../../mocks/categories";
+import { Category } from "../../../app/entities/Category";
+import { useCategoryListTransaction } from "./useCategoryListTransaction";
 
 interface CategoryListTransactionsProps {
-  setCategoryActive: (category: CategoryType) => void;
-  categories: CategoryType[];
+  setCategoryActive: (category: Category) => void;
+  categories: Category[];
   isModalCategoryOpen: boolean;
-  handleCategorySelect: (categoryId: number) => void;
+  handleCategorySelect: (categoryId: string) => void;
   handleToggleAddCategory: () => void;
+  selectedCategoryType: "EXPENSE" | "INCOME";
 }
 
 const CategoryListTransactions: React.FC<CategoryListTransactionsProps> = ({
@@ -18,12 +19,10 @@ const CategoryListTransactions: React.FC<CategoryListTransactionsProps> = ({
   isModalCategoryOpen,
   handleCategorySelect,
   handleToggleAddCategory,
+  selectedCategoryType,
 }) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const filteredCategories = categories.filter((category) =>
-    category.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { filteredCategories, searchTerm, setSearchTerm } =
+    useCategoryListTransaction(categories, selectedCategoryType);
 
   return (
     <Modal

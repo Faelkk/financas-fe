@@ -1,31 +1,38 @@
-import { useState } from "react";
-import { CategoryType } from "../../../../../../mocks/categories";
+import { useState, useEffect } from "react";
+import { Category } from "../../../../../../app/entities/Category";
 
-export function useModalCustomCategory({
+export const useModalCustomCategory = ({
   categories,
 }: {
-  categories: CategoryType[];
-}) {
-  const [isModalActive, setIsModalActive] = useState("despesas");
-  const [isSearching, setIsSearching] = useState(false);
+  categories: Category[];
+}) => {
+  const [isModalActive, setIsModalActive] = useState<"EXPENSE" | "INCOME">(
+    "EXPENSE"
+  );
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    const filtered = categories.filter(
+      (category) =>
+        category.categoryType === isModalActive &&
+        category.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredCategories(filtered);
+  }, [categories, isModalActive, searchQuery]);
 
   const handleToggleSearch = () => {
     setIsSearching(!isSearching);
-    setSearchQuery("");
   };
 
-  const filteredCategories = categories.filter((category) =>
-    category.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return {
-    isModalActive,
-    setIsModalActive,
-    handleToggleSearch,
     filteredCategories,
+    handleToggleSearch,
+    isModalActive,
     isSearching,
+    setIsModalActive,
     searchQuery,
     setSearchQuery,
   };
-}
+};

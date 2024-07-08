@@ -1,9 +1,9 @@
-import { BackpackIcon, Pencil2Icon } from "@radix-ui/react-icons";
-import { CategoryType } from "../../../../mocks/categories";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import { useModal } from "../../../modal/useModal";
 import ModalEditCategory from "./components/modals/ModalEditCategory";
+import { Category } from "../../../../app/entities/Category";
 
-const CustomCategoryItem = ({ category }: { category: CategoryType }) => {
+const CustomCategoryItem = ({ category }: { category: Category }) => {
   const { handleToggleModal, isModalOpen: isEditModalCategory } = useModal();
 
   return (
@@ -14,9 +14,12 @@ const CustomCategoryItem = ({ category }: { category: CategoryType }) => {
             className="rounded-full p-2 bg-gray-100"
             style={{ background: category.categoryColor }}
           >
-            <BackpackIcon height={20} width={20} color="#FFF" />
+            <img
+              src={`http://localhost:5001/uploads/${category.categoryIcon}`}
+              className="w-5 h-5"
+            />
           </figure>
-          <span className="text-[#aaa] font-inter mt-1 text-[16px] max-w-[180px] ">
+          <span className="text-[#aaa] font-inter mt-1 text-[16px] max-w-[180px] capitalize">
             {category.categoryName}
           </span>
         </div>

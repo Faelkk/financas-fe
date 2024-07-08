@@ -4,8 +4,8 @@ const EducationIcon = ({
   width,
 }: {
   color: string;
-  height: string;
-  width: string;
+  height: number;
+  width: number;
 }) => {
   return (
     <>

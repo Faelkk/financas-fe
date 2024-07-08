@@ -1,11 +1,14 @@
 import { httpClient } from "../httpClient";
 
-export interface UpdateTransactionsParams {
-  id: string;
+export interface UpdateCategorysParams {
+  image: string;
+  categoryName: string;
+  categoryType: string;
+  categoryColor: string;
 }
 
-export async function update({ id, ...params }: UpdateTransactionsParams) {
-  const { data } = await httpClient.put(`/transactions/${id}`, params);
+export async function update(id: string, dataUpdate: UpdateCategorysParams) {
+  const { data } = await httpClient.patch(`/categories/${id}`, dataUpdate);
 
   return data;
 }

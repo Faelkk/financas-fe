@@ -1,13 +1,11 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
 import { Swiper, SwiperProps } from "swiper/react";
-import { A11y, Autoplay } from "swiper/modules";
 
 import "./slide.css";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import "swiper/css/free-mode";
 
 interface SliderProps {
@@ -25,12 +23,7 @@ export default function Slider({ settings, children, month }: SliderProps) {
   }, []);
 
   return (
-    <Swiper
-      initialSlide={initialSlide}
-      centeredSlides
-      modules={[A11y, Autoplay]}
-      {...settings}
-    >
+    <Swiper initialSlide={initialSlide} centeredSlides {...settings}>
       {children}
     </Swiper>
   );

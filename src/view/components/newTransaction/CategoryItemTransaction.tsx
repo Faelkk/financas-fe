@@ -1,5 +1,4 @@
-import { BackpackIcon } from "@radix-ui/react-icons";
-import { CategoryType } from "../../../mocks/categories";
+import { Category } from "../../../app/entities/Category";
 
 const CategoryItemTransaction = ({
   setCategoryActive,
@@ -7,10 +6,10 @@ const CategoryItemTransaction = ({
   handleToggleAddCategory,
   category,
 }: {
-  setCategoryActive: (category: CategoryType) => void;
-  handleCategorySelect: (categoryId: number) => void;
+  setCategoryActive: (category: Category) => void;
+  handleCategorySelect: (categoryId: string) => void;
   handleToggleAddCategory: () => void;
-  category: CategoryType;
+  category: Category;
 }) => {
   const handleClickCategory = () => {
     handleCategorySelect(category.id);
@@ -25,15 +24,17 @@ const CategoryItemTransaction = ({
         onClick={handleClickCategory}
       >
         <figure
+          className="rounded-full p-2 flex items-center justify-center max-w-12 max-h-12 h-12 w-12 "
           style={{ background: category.categoryColor }}
-          className={
-            "rounded-full p-2 flex items-center justify-center max-w-12 max-h-12 h-12 w-12 "
-          }
         >
-          <BackpackIcon height={20} width={20} color="#FFF" />
+          <img
+            src={`http://localhost:5001/uploads/${category.categoryIcon}`}
+            className="w-5 h-5"
+          />
         </figure>
+
         <span className="font-inter text-[14px] text-gray-50  text-center font-semibold">
-          {category.categoryName}
+          {category?.categoryName}
         </span>
       </div>
 

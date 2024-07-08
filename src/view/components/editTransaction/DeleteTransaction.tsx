@@ -1,15 +1,23 @@
+import { Transaction } from "../../../app/entities/Transactions";
 import Modal from "../../modal/Modal";
+import Spinner from "../Spinner";
+import { useDeleteTransaction } from "./useDeleteTransaction";
 
 const DeleteTransaction = ({
-  handleToggleDeleteCategoryModal,
+  transaction,
+  handleToggleEditTransactionModal,
+  handleToggleTransactionModal,
   isDeleteModalOpen,
 }: {
-  handleToggleDeleteCategoryModal: () => void;
+  transaction: Transaction;
+  handleToggleTransactionModal: () => void;
+  handleToggleEditTransactionModal: () => void;
   isDeleteModalOpen: boolean;
 }) => {
-  const handleDeleCategory = () => {
-    console.log("deletou");
-  };
+  const { handleDeleteTransaction, isPending } = useDeleteTransaction(
+    handleToggleTransactionModal,
+    handleToggleEditTransactionModal
+  );
 
   return (
     <Modal
@@ -24,14 +32,21 @@ const DeleteTransaction = ({
         </h2>
         <div className="flex flex-col items-center gap-3 w-full">
           <button
-            className="p-3 rounded-md bg-[#E24F45] font-inter text-gray-50 font-semibold max-w-[230px] w-full"
-            onClick={handleDeleCategory}
+            className="p-3 rounded-md bg-[#E24F45] font-inter text-gray-50 font-semibold max-w-[230px] w-full disabled:bg-[#484849]"
+            onClick={() => handleDeleteTransaction(transaction.id)}
+            disabled={isPending}
           >
-            Confirmar exclusão
+            {isPending ? (
+              <div className="flex justify-center ">
+                <Spinner className="fill-gray-500 w-6 h-6" />{" "}
+              </div>
+            ) : (
+              " Confirmar exclusão"
+            )}
           </button>
           <button
             className="p-3 rounded-md border border-black-600 font-inter text-black-600  font-semibold max-w-[230px] w-full"
-            onClick={handleToggleDeleteCategoryModal}
+            onClick={handleToggleTransactionModal}
           >
             Cancelar
           </button>

@@ -8,8 +8,9 @@ import Modal from "../../../../../modal/Modal";
 import { useModal } from "../../../../../modal/useModal";
 import ModalCreateCustomCategory from "./ModalCreateCustomCategory";
 import CustomCategoryItemMap from "./CustomCategoryItemMap";
-import { categories } from "../../../../../../mocks/categories";
 import { useModalCustomCategory } from "./useModalCustomCategory";
+import { useCategories } from "../../../../../../app/hooks/useCategories";
+import Spinner from "../../../../../components/Spinner";
 
 const ModalCustomCategory = ({
   handleToggleModal,
@@ -22,6 +23,8 @@ const ModalCustomCategory = ({
     handleToggleModal: HandleToggleCustomModal,
     isModalOpen: isModalCategoryOpen,
   } = useModal();
+
+  const { categories, isLoading } = useCategories();
 
   const {
     filteredCategories,
@@ -84,11 +87,11 @@ const ModalCustomCategory = ({
             <div className="flex flex-col items-center">
               <button
                 className="font-inter text-gray-50 font-medium mb-3"
-                onClick={() => setIsModalActive("despesas")}
+                onClick={() => setIsModalActive("EXPENSE")}
               >
                 Despesas
               </button>
-              {isModalActive === "despesas" ? (
+              {isModalActive === "EXPENSE" ? (
                 <div className="h-2 w-2 rounded-full bg-gray-0"></div>
               ) : (
                 ""
@@ -97,11 +100,11 @@ const ModalCustomCategory = ({
             <div className="flex flex-col items-center ">
               <button
                 className="font-inter text-gray-50 font-medium mb-3"
-                onClick={() => setIsModalActive("receitas")}
+                onClick={() => setIsModalActive("INCOME")}
               >
                 Receitas
               </button>
-              {isModalActive === "receitas" ? (
+              {isModalActive === "INCOME" ? (
                 <div className="h-2 w-2 rounded-full bg-gray-0"></div>
               ) : (
                 ""
@@ -118,17 +121,26 @@ const ModalCustomCategory = ({
               <PlusCircledIcon height={32} width={32} color="#f3f3f3aa" />
             </figure>
             <button className="bg-transparent font-inter placeholder:font-inter text-[#f3f3f3aa] placeholder:text-[#f3f3f3aa]  w-full peer placeholder-shown:pt-0 transition-all outline-none  focus:bg-transparent text-left">
-              Criar categoria de {isModalActive}
+              Criar categoria de{" "}
+              {isModalActive === "EXPENSE" ? "Despesa" : "Receita"}
             </button>
           </div>
           <div className="mt-5 flex flex-col gap-10 h-fu">
-            <CustomCategoryItemMap categories={filteredCategories} />
+            {isLoading ? (
+              <div className=" flex justify-center w-full h-full">
+                {" "}
+                <Spinner />
+              </div>
+            ) : (
+              <CustomCategoryItemMap categories={filteredCategories} />
+            )}
           </div>
         </section>
       </Modal>
 
       {isModalCategoryOpen && (
         <ModalCreateCustomCategory
+          selectedCategoryType={isModalActive}
           isModalCategoryOpen={isModalCategoryOpen}
           HandleToggleCustomModal={HandleToggleCustomModal}
         />

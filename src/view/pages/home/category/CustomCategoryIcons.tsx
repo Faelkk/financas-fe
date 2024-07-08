@@ -61,9 +61,11 @@ const iconComponents: IconComponents = {
 const CustomCategoryIcons = ({
   selectedIcon,
   handleChangeCategoryIcon,
+  iconRef,
 }: {
   selectedIcon: string;
   handleChangeCategoryIcon: (categoryIcon: string) => void;
+  iconRef: React.RefObject<HTMLDivElement>;
 }) => {
   const icons: IconName[] = [
     "AddIcon",
@@ -96,15 +98,12 @@ const CustomCategoryIcons = ({
           >
             <figure
               className={cn(
-                "rounded-full p-2 flex items-center justify-center max-w-12 max-h-12 h-12 w-12 ",
-                icon === selectedIcon ? "bg-[#f7f7f7]" : "bg-[#484849]"
+                "rounded-full p-2 flex items-center justify-center max-w-12 max-h-12 h-12 w-12  ",
+                icon === selectedIcon ? "bg-none border-2" : "bg-[#484849]"
               )}
+              ref={icon === selectedIcon ? iconRef : null}
             >
-              <IconComponent
-                height={24}
-                width={24}
-                color={icon === selectedIcon ? "#484849" : "#F7F7F7"}
-              />
+              <IconComponent height={24} width={24} color="#F7F7F7" />
             </figure>
           </div>
         );

@@ -1,24 +1,22 @@
 import { Link } from "react-router-dom";
 import UserIcon from "../../../icons/UserIcon";
 import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useModal } from "../../../modal/useModal";
 import AccountConfig from "../../../components/account/AccountConfig";
 import NewTransaction from "../../../components/newTransaction/NewTransaction";
-import { useState } from "react";
+import { useHeader } from "./useHeader";
 
 const Header = () => {
-  const username = "Rafael";
-  const { isModalOpen, handleToggleModal } = useModal();
   const {
-    isModalOpen: isTransactionModalOpen,
-    handleToggleModal: handleToggleTransactionModal,
-  } = useModal();
-  const [transactionType, setIsTransactionType] = useState("despesa");
-
-  const handleChangeTransactionType = (type: string) => {
-    setIsTransactionType(type);
-    handleToggleTransactionModal();
-  };
+    user,
+    transactionType,
+    handleChangeTransactionType,
+    isTransactionModalOpen,
+    isModalOpen,
+    handleToggleModal,
+    handleToggleTransactionModal,
+    formattedDespesa,
+    formattedReceita,
+  } = useHeader();
 
   return (
     <>
@@ -35,7 +33,7 @@ const Header = () => {
           {" "}
           <h2 className="font-inter text-gray-200">Boa noite,</h2>
           <span className="font-poppins text-gray-50 font-semibold text-[20px]">
-            {username}
+            {user?.username}
           </span>
         </div>
       </header>
@@ -56,7 +54,7 @@ const Header = () => {
                 {" "}
                 <h2 className="font-inter text-gray-200">Boa noite,</h2>
                 <span className="font-poppins text-gray-50 font-semibold text-[20px]">
-                  {username}
+                  {user?.username}
                 </span>
               </div>
             </div>
@@ -67,7 +65,7 @@ const Header = () => {
                   Receita mensal
                 </span>
                 <span className="font-inter text-teal-900 font-medium">
-                  R$900,00
+                  {formattedReceita}
                 </span>
               </div>
               <div className="bg-black-100 flex justify-center items-center  flex-col max-w-[200px] w-full rounded-md drop-shadow-md">
@@ -76,7 +74,7 @@ const Header = () => {
                   Despesa mensal
                 </span>
                 <span className="font-inter text-red-500 font-medium">
-                  R$400,00
+                  {formattedDespesa}
                 </span>
               </div>
               <Link
@@ -117,7 +115,7 @@ const Header = () => {
 
       {isTransactionModalOpen && (
         <NewTransaction
-          defaultTransaction={transactionType as "despesas" | "receitas"}
+          defaultTransaction={transactionType as "EXPENSE" | "INCOME"}
           IsTransactionModalOpen={isTransactionModalOpen}
           handleToggleTransactionModal={handleToggleTransactionModal}
         />

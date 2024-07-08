@@ -26,7 +26,7 @@ const StaticsCategory = ({ category }: StaticsCategoryT) => {
         </div>
         <div className="flex flex-col w-[80px]">
           <span className=" font-inter text-gray-0 font-semibold">
-            R$ {formatCurrency(String(category.total))}
+            {formatCurrency(String(category.total))}
           </span>
           <span className=" font-inter text-gray-400 text-[14px]">
             {category.percentage.toFixed(1)}%

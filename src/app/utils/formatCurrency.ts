@@ -1,10 +1,15 @@
 export const formatCurrency = (value: string): string => {
   if (!value) return "0,00";
 
-  value = value.replace(/\D/g, "");
-  value = (parseInt(value, 10) / 100).toFixed(2) + "";
-  value = value.replace(".", ",");
-  value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+  const numericValue = value.replace(/\D/g, "");
 
-  return value;
+  const integerValue = parseInt(numericValue, 10);
+
+  const formattedValue = integerValue.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 2,
+  });
+
+  return formattedValue;
 };

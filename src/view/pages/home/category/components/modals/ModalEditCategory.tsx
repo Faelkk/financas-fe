@@ -1,32 +1,38 @@
 import { CheckIcon, ChevronLeftIcon, TrashIcon } from "@radix-ui/react-icons";
 import Modal from "../../../../../modal/Modal";
-import CustomCategoryIcons from "../../CustomCategoryIcons";
 import { cn } from "../../../../../../app/utils/cn";
 import { useModal } from "../../../../../modal/useModal";
 import ModalDeleteCategory from "./ModalDeleteCategory";
-import ModalColors from "./ModalColors";
-import { CategoryType } from "../../../../../../mocks/categories";
 import { useModalEditCategoryController } from "./useModalEditCategoryController";
+import { Category } from "../../../../../../app/entities/Category";
+import ModalColorsEdit from "../../ModalColorsEdit";
+import CustomCategoryIcons from "../../CustomCategoryIcons";
 
 const ModalEditCategory = ({
   categoryBeingEdited,
   HandleToggleEditModal,
   isEditModalCategory,
 }: {
-  categoryBeingEdited: CategoryType;
+  categoryBeingEdited: Category;
   HandleToggleEditModal: () => void;
   isEditModalCategory: boolean;
 }) => {
   const {
+    iconRef,
     errors,
     handleSubmit,
     register,
     isFormEmpty,
     selectedColor,
     selectedIcon,
+    isPending,
     handleChangeCategoryIcon,
     handleChangeColor,
-  } = useModalEditCategoryController(categoryBeingEdited);
+    hasChanged,
+  } = useModalEditCategoryController(
+    categoryBeingEdited,
+    HandleToggleEditModal
+  );
   const {
     handleToggleModal: handleToggleDeleteCategoryModal,
     isModalOpen: isDeleteModalOpen,
@@ -62,8 +68,14 @@ const ModalEditCategory = ({
             </div>
 
             <div className="flex gap-5 items-center">
-              <div className="bg-gray-400/50 rounded-full p-1 flex items-center">
-                <button className="bg-gray-400 h-12 w-12 rounded-full" />
+              <div
+                className=" rounded-full p-1 flex items-center"
+                style={{ backgroundColor: `${selectedColor}80` }}
+              >
+                <button
+                  className="bg-gray-400 h-12 w-12 rounded-full"
+                  style={{ backgroundColor: selectedColor }}
+                />
               </div>
               <div>
                 <input
@@ -83,7 +95,7 @@ const ModalEditCategory = ({
                   Escolha uma cor
                 </h2>
                 <div className="flex items-center gap-4 overflow-x-auto custom-scrollbar pb-3">
-                  <ModalColors
+                  <ModalColorsEdit
                     handleChangeColor={handleChangeColor}
                     selectedColor={selectedColor}
                   />
@@ -96,6 +108,7 @@ const ModalEditCategory = ({
                 </h2>
 
                 <CustomCategoryIcons
+                  iconRef={iconRef}
                   handleChangeCategoryIcon={handleChangeCategoryIcon}
                   selectedIcon={selectedIcon}
                 />
@@ -103,7 +116,12 @@ const ModalEditCategory = ({
             </div>
             <div className="flex justify-center w-full mt-10">
               <button
-                disabled={isFormEmpty || Object.keys(errors).length > 0}
+                disabled={
+                  isFormEmpty ||
+                  Object.keys(errors).length > 0 ||
+                  !hasChanged ||
+                  isPending
+                }
                 className={cn(
                   "rounded-full bg-teal-900 p-2 max-w-12 max-h-12 h-12 w-12 flex items-center justify-center disabled:bg-gray-500"
                 )}
@@ -119,6 +137,7 @@ const ModalEditCategory = ({
         <ModalDeleteCategory
           categoryBeingDeleted={categoryBeingEdited}
           isDeleteModalOpen={isDeleteModalOpen}
+          handleToggleEditModal={HandleToggleEditModal}
           handleToggleDeleteCategoryModal={handleToggleDeleteCategoryModal}
         />
       )}

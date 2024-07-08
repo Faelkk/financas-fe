@@ -1,14 +1,14 @@
 import { useWindowHeight } from "../../../../../app/hooks/useWindowHeight";
+import { TransactionResponse } from "../../../../../app/services/transactionsService/getAll";
 import NewTransaction from "../../../../components/newTransaction/NewTransaction";
 import { useModal } from "../../../../modal/useModal";
 import TransactionsOverview from "../../transactionsOverview/TransactionsOverview";
-import { Transaction } from "../transactionCard/TransactionCard";
 import TransactionsList from "../transactionsList/TransactionsList";
 
 const TransactionContent = ({
   filteredTransactions,
 }: {
-  filteredTransactions: Transaction[];
+  filteredTransactions: TransactionResponse;
 }) => {
   const { isModalOpen, handleToggleModal } = useModal();
   const height = useWindowHeight();

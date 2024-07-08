@@ -1,10 +1,10 @@
-import { CategoryType } from "../../../../../../mocks/categories";
+import { CategoyResponse } from "../../../../../../app/services/categoriesService/getAll";
 import CustomCategoryItem from "../../CustomCategoryItem";
 
 const CustomCategoryItemMap = ({
   categories,
 }: {
-  categories: CategoryType[];
+  categories: CategoyResponse;
 }) => {
   return (
     <>

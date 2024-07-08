@@ -1,42 +1,82 @@
 import { useEffect, useState } from "react";
-import { Transaction } from "./components/transactionCard/TransactionCard";
+import { TransactionResponse } from "../../../app/services/transactionsService/getAll";
+import { useSwiper } from "swiper/react";
 
-export function useTransactionController(transactions: Transaction[]) {
-  const [filteredTransactions, setFilteredTransactions] = useState<
-    Transaction[]
-  >([]);
+export function useTransactionController(transactions: TransactionResponse) {
+  const [filteredTransactions, setFilteredTransactions] =
+    useState<TransactionResponse>([]);
   const [monthlyFilteredTransactions, setMonthlyFilteredTransactions] =
-    useState<Transaction[]>([]);
-  const [activeMonth, setActiveMonth] = useState<number>(new Date().getMonth());
+    useState<TransactionResponse>([]);
+  const [activeMonth, setActiveMonth] = useState<number>(
+    new Date().getMonth() + 1
+  );
+  const [currentYear, setCurrentYear] = useState<number>(
+    new Date().getFullYear()
+  );
+  const swiper = useSwiper();
 
   useEffect(() => {
-    const filtered = transactions.filter((transaction) => {
-      return transaction.date.getMonth() === activeMonth;
+    if (
+      JSON.stringify(transactions) !==
+      JSON.stringify(monthlyFilteredTransactions)
+    ) {
+      setMonthlyFilteredTransactions(transactions);
+    }
+  }, [transactions]);
+
+  useEffect(() => {
+    const filtered = monthlyFilteredTransactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+
+      if (!isNaN(transactionDate.getTime())) {
+        return (
+          transactionDate.getMonth() + 1 === activeMonth &&
+          transactionDate.getFullYear() === currentYear
+        );
+      }
+      return false;
     });
+
     setFilteredTransactions(filtered);
-    setMonthlyFilteredTransactions(filtered);
-  }, [activeMonth]);
+  }, [activeMonth, currentYear, monthlyFilteredTransactions]);
+
+  const handleMonthChange = async (monthIndex: number) => {
+    if (swiper) {
+      swiper.disable();
+    }
+
+    if (monthIndex === 13) {
+      setActiveMonth(1);
+
+      setCurrentYear(currentYear + 1);
+    } else if (monthIndex === 0) {
+      setActiveMonth(12);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setActiveMonth(monthIndex);
+    }
+    if (swiper) {
+      swiper.enable();
+    }
+  };
 
   const handleSearch = (searchTerm: string) => {
     const filtered = monthlyFilteredTransactions.filter((transaction) => {
       return (
-        transaction.description
+        transaction.transactionDescription
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        transaction.transferNumber.toString().includes(searchTerm)
+        transaction.transactionValue.toString().includes(searchTerm)
       );
     });
     setFilteredTransactions(filtered);
   };
 
-  const handleMonthChange = (monthIndex: number) => {
-    setActiveMonth(monthIndex);
-    const filtered = transactions.filter((transaction) => {
-      return transaction.date.getMonth() === monthIndex;
-    });
-    setFilteredTransactions(filtered);
-    setMonthlyFilteredTransactions(filtered);
+  return {
+    filteredTransactions,
+    handleMonthChange,
+    handleSearch,
+    currentYear,
+    activeMonth,
   };
-
-  return { filteredTransactions, handleMonthChange, handleSearch };
 }
