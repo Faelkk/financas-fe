@@ -34,7 +34,7 @@ const ModalCreateCustomCategory = ({
     <>
       <Modal
         open={isModalCategoryOpen}
-        title="Modal para ver o saldo da sua conta"
+        title="Modal para criar categoria"
         classNameModal="p-0 flex flex-col medium:h-auto lg:max-w-[700px]"
       >
         <form onSubmit={handleSubmit} className="flex flex-col h-full">

@@ -109,11 +109,11 @@ const useNewTransactionController = (
       if (transaction) {
         invalidateTransactions();
         localStorage.removeItem("saldo");
-        toast.success("Transação editada com sucesso!");
+        toast.success("Transação criada com sucesso!");
         HandleToggleTransactionModal();
       }
     } catch {
-      toast.error("Ocorreu um erro ao editar transação");
+      toast.error("Ocorreu um erro ao criar transação");
     }
   });
 

@@ -69,7 +69,7 @@ const EditTransaction = ({
     <>
       <Modal
         open={IsTransactionModalOpen}
-        title="Modal para fazer nova transação"
+        title="Modal para editar nova transação"
         classNameModal=" p-0 flex flex-col h-full w-full medium:h-auto md:w-[80%] bg-[#151513]"
       >
         <form className="flex flex-col h-full" onSubmit={handleSubmit}>

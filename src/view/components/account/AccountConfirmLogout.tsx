@@ -27,7 +27,7 @@ const AccountConfirmLogout = ({
               className="p-3 rounded-md bg-[#E24F45] font-inter text-gray-50 font-semibold max-w-[230px] w-full"
               onClick={() => signout()}
             >
-              Confirmar exclusão
+              Confirmar
             </button>
             <button
               className="p-3 rounded-md border border-black-600 font-inter text-black-600  font-semibold max-w-[230px] w-full"
