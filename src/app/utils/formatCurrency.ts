@@ -1,15 +1,12 @@
 export const formatCurrency = (value: string): string => {
-  if (!value) return "0,00";
+  const number = parseFloat(value);
+  if (isNaN(number)) {
+    return "Invalid number";
+  }
 
-  const numericValue = value.replace(/\D/g, "");
-
-  const integerValue = parseInt(numericValue, 10);
-
-  const formattedValue = integerValue.toLocaleString("pt-BR", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
     minimumFractionDigits: 2,
-  });
-
-  return formattedValue;
+  }).format(number);
 };

@@ -64,7 +64,7 @@ const CategorysTransaction = ({
                   <PlusCircledIcon color="#000" />
                 </div>
                 <span className="font-inter  text-[#A6A8A5]">
-                  Criar categoria
+                  criar categoria
                 </span>
               </div>
             )}

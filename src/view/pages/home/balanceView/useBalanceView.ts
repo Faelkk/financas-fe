@@ -25,12 +25,8 @@ export function useBalanceView() {
   useEffect(() => {
     const savedSaldo = localStorage.getItem("saldo");
     if (savedSaldo !== null && savedSaldo !== String(savedSaldo)) {
-      console.log(savedSaldo);
-
       setSaldo(parseFloat(savedSaldo));
     } else {
-      console.log("caiu aqui");
-
       const newSaldo = totalReceitas - totalDespesas;
       setSaldo(newSaldo);
       localStorage.setItem("saldo", String(newSaldo));

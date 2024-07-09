@@ -1,7 +1,19 @@
 import { TransactionResponse } from "../../../../app/services/transactionsService/getAll";
-import { formatCurrency } from "../../../../app/utils/formatCurrency";
 
 type TransactionType = "EXPENSE" | "INCOME";
+
+export const formatCurrency = (value: string): string => {
+  const number = parseFloat(value);
+  if (isNaN(number)) {
+    return "Invalid number";
+  }
+
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 2,
+  }).format(number);
+};
 
 const TransactionsOverview = ({
   filteredTransactions,
@@ -16,6 +28,7 @@ const TransactionsOverview = ({
       .filter((transaction) => transaction.transactionType === type)
       .reduce((acc, transaction) => {
         const amount = parseFloat(transaction.transactionValue);
+
         return acc + amount;
       }, 0);
 

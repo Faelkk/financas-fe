@@ -79,7 +79,8 @@ const useEditTransactionController = (
   useEffect(() => {
     if (categories.length > 0) {
       setCategoryActive(
-        categories.find((cat) => cat.id === transaction.categoryId) || null
+        categories.find((cat) => cat.id === transaction.categoryId) ||
+          categories[0]
       );
     }
   }, [categories, transaction.categoryId]);
@@ -89,10 +90,12 @@ const useEditTransactionController = (
       const filtered = categories.filter(
         (cat) => cat.categoryType === transactionType
       );
+
       setFilteredCategories(filtered.length > 0 ? filtered : []);
       if (filtered.length > 0) {
         setCategoryActive(
-          filtered.find((cat) => cat.id === transaction.categoryId) || null
+          filtered.find((cat) => cat.id === transaction.categoryId) ||
+            filtered[0]
         );
       } else {
         setCategoryActive(null);

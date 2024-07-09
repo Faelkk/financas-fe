@@ -1,5 +1,4 @@
 import React from "react";
-import { formatCurrency } from "../../../../../app/utils/formatCurrency";
 import { cn } from "../../../../../app/utils/cn";
 import { useModal } from "../../../../modal/useModal";
 import EditTransaction from "../../../../components/editTransaction/EditTransaction";
@@ -9,6 +8,19 @@ import { useCategories } from "../../../../../app/hooks/useCategories";
 
 type TransactionCardProps = {
   transaction: Transaction;
+};
+
+export const formatCurrency = (value: string): string => {
+  const number = parseFloat(value);
+  if (isNaN(number)) {
+    return "Invalid number";
+  }
+
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 2,
+  }).format(number);
 };
 
 const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {

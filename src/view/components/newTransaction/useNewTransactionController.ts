@@ -149,10 +149,6 @@ const useNewTransactionController = (
     setCategoryActive(category);
   };
 
-  useEffect(() => {
-    console.log(formattedValue);
-  }, [formattedValue]);
-
   return {
     isLoading,
     categories: filteredCategories,
