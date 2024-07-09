@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { transactionsService } from "../../../app/services/transactionsService";
 import { UpdateTransactionsParams } from "../../../app/services/transactionsService/update";
+import { formatEditCurrency } from "../../../app/utils/formatEditCurrency";
 
 const parseCurrency = (value: string): number => {
   value = value.replace(/\./g, "").replace(",", ".");
@@ -131,7 +132,7 @@ const useEditTransactionController = (
 
         if (newTransaction) {
           invalidateTransactions();
-          toast.success("Transação criada com sucesso!");
+          toast.success("Transação editada com sucesso!");
           handleToggleTransactionModal();
         }
       }
@@ -177,7 +178,7 @@ const useEditTransactionController = (
   useEffect(() => {
     const subscription = watch((value) => {
       setFormattedValue(
-        formatCurrency(value.transactionValue?.toString() || "0,00")
+        formatEditCurrency(value.transactionValue?.toString() || "0,00")
       );
     });
     return () => subscription.unsubscribe();

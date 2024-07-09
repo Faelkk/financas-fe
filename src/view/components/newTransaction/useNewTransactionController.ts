@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { useEffect, useState } from "react";
-import { formatCurrency } from "../../../app/utils/formatCurrency";
 import { useCategories } from "../../../app/hooks/useCategories";
 import { Category } from "../../../app/entities/Category";
 import { format } from "date-fns";
 import { transactionsService } from "../../../app/services/transactionsService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateTransactionsParams } from "../../../app/services/transactionsService/create";
+import { formatEditCurrency } from "../../../app/utils/formatEditCurrency";
 
 const parseCurrency = (value: string): number => {
   value = value.replace(/\./g, "").replace(",", ".");
@@ -121,7 +121,7 @@ const useNewTransactionController = (
   useEffect(() => {
     const subscription = watch((value) => {
       setFormattedValue(
-        formatCurrency(value.transactionValue?.toString() || "0,00")
+        formatEditCurrency(value.transactionValue?.toString() || "0,00")
       );
     });
     return () => subscription.unsubscribe();
@@ -147,6 +147,10 @@ const useNewTransactionController = (
   const changeCategoryActive = (category: Category) => {
     setCategoryActive(category);
   };
+
+  useEffect(() => {
+    console.log(formattedValue);
+  }, [formattedValue]);
 
   return {
     isLoading,
