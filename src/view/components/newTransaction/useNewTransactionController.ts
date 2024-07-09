@@ -108,6 +108,7 @@ const useNewTransactionController = (
 
       if (transaction) {
         invalidateTransactions();
+        localStorage.removeItem("saldo");
         toast.success("Transação editada com sucesso!");
         HandleToggleTransactionModal();
       }

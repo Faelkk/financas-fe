@@ -24,6 +24,7 @@ export function useDeleteTransaction(
 
       if (data.deleted) {
         toast.success("transação deletada com sucesso!");
+        localStorage.removeItem("saldo");
         handleToggleTransactionModal();
         handleToggleEditModal();
         invalidateTransaction();

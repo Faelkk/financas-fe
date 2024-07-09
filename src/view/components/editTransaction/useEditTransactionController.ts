@@ -78,9 +78,11 @@ const useEditTransactionController = (
 
   useEffect(() => {
     if (categories.length > 0) {
-      setCategoryActive(categories[0]);
+      setCategoryActive(
+        categories.find((cat) => cat.id === transaction.categoryId) || null
+      );
     }
-  }, [categories]);
+  }, [categories, transaction.categoryId]);
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -89,7 +91,9 @@ const useEditTransactionController = (
       );
       setFilteredCategories(filtered.length > 0 ? filtered : []);
       if (filtered.length > 0) {
-        setCategoryActive(filtered[0]);
+        setCategoryActive(
+          filtered.find((cat) => cat.id === transaction.categoryId) || null
+        );
       } else {
         setCategoryActive(null);
       }
@@ -133,6 +137,7 @@ const useEditTransactionController = (
         if (newTransaction) {
           invalidateTransactions();
           toast.success("Transação editada com sucesso!");
+          localStorage.removeItem("saldo");
           handleToggleTransactionModal();
         }
       }
