@@ -60,9 +60,14 @@ export function useModalEditCategoryController(
     });
   }, [categoryBeingEdited]);
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (data: UpdateCategorysParams) => {
-      return categoriesService.update(categoryBeingEdited.id, data);
+  const { mutateAsync, isPending } = useMutation<
+    Category,
+    Error,
+    { categoryId: string; dataUpdate: UpdateCategorysParams },
+    string
+  >({
+    mutationFn: async ({ categoryId, dataUpdate }) => {
+      return categoriesService.update(categoryId, dataUpdate);
     },
   });
 
@@ -76,14 +81,7 @@ export function useModalEditCategoryController(
       if (hasChanged) {
         if (iconRef.current) {
           const svgString = iconRef.current.innerHTML;
-          const svgWithWhiteFill = svgString.replace(
-            /fill=".*?"/g,
-            'fill="#FFF"'
-          );
-          const iconFile = svgToFile(
-            svgWithWhiteFill,
-            `${data.categoryIcon}.svg`
-          );
+          const iconFile = svgToFile(svgString, `${data.categoryIcon}.svg`);
 
           const formData = new FormData();
           formData.append("categoryName", data.categoryName);
@@ -91,21 +89,22 @@ export function useModalEditCategoryController(
           formData.append("image", iconFile);
           formData.append("categoryType", categoryBeingEdited.categoryType);
 
-          const category = await mutateAsync(
-            formData as unknown as UpdateCategorysParams
-          );
+          const category = await mutateAsync({
+            categoryId: categoryBeingEdited.id,
+            dataUpdate: formData as unknown as UpdateCategorysParams,
+          });
 
           if (category) {
             invalidateCategories();
           }
 
-          toast.success("Categoria criada com sucesso!");
+          toast.success("Categoria editada com sucesso!");
         }
       } else {
         HandleToggleEditModal();
       }
     } catch {
-      toast.error("Ocorreu um erro ao salvar valor");
+      toast.error("Ocorreu um erro ao editar categoria");
     }
   });
 
